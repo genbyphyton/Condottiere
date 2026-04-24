@@ -25,7 +25,7 @@ func draw() -> CardData:
 func draw_many(count: int) -> Array[CardData]:
 	var result: Array[CardData] = []
 	for i in count:
-		if _draw_pile.is_empty():
+		if is_empty():
 			break
 		var card: CardData = draw()
 		result.append(card)
@@ -48,3 +48,6 @@ func draw_pile_size() -> int:
 	
 func discard_pile_size() -> int:
 	return _discard_pile.size()
+
+func is_empty() -> bool:
+	return _draw_pile.is_empty()
