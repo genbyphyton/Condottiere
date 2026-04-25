@@ -398,7 +398,7 @@ When card effects overlap, resolve in the following order — highest priority f
 | Role | Name | Responsibilities |
 |------|------|-----------------|
 | Game Designer / Team Lead | Omar Aslan | Game rules, card balance, faction design, GDD maintenance |
-| Lead Programmer / Game Designer | Igor | Core game loop, card systems, technical architecture |
+| Lead Programmer / Game Designer | Igor Chsheglov | Core game loop, card systems, technical architecture |
 | Programmer | Togzhan Tleugali | AI logic, map interaction, UI systems |
 | Narrative Writer / Artist | Konstantin Maslov | In-game narrative, card descriptions, card art |
 | UI / Artist | Ayana Kassenova | User interface, card art support |
