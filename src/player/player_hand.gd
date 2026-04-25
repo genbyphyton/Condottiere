@@ -28,7 +28,7 @@ func play_card(card: CardData, battle_line: BattleLine) -> bool:
 	if index == -1:
 		return false
 	_cards.remove_at(index)
-	battle_line.add_cart(cart)
+	battle_line.add_card(card)
 	card_played.emit(card)
 	return true
 	

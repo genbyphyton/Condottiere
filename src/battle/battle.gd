@@ -20,10 +20,13 @@ func _init(hands: Array[PlayerHand], deck: Deck, condottiere_player: int) -> voi
 	_hands = hands
 	_deck = deck
 	_current_player = condottiere_player
-	_context.season_changed.connect(_on_season)
+	_context.season_changed.connect(_on_season_changed)
 	for i in PLAYER_COUNT:
 		_lines.append(BattleLine.new(_context))
 		_passed.append(false)
+		
+func _on_season_changed() -> void:
+	_recalculate_all()
 		
 func play_card(player_index: int, card: CardData) -> bool:
 	if not _can_act(player_index):
@@ -34,7 +37,7 @@ func play_card(player_index: int, card: CardData) -> bool:
 	match card.card_type:
 		CardData.CardType.SURRENDER:
 			_hands[player_index].discard_card(card, _deck)
-			_resolve_battle(true)
+			_resolve_battle()
 		CardData.CardType.BISHOP:
 			_hands[player_index].play_card(card, _lines[player_index])
 			_lines[player_index].apply_bishop(_lines)
@@ -62,7 +65,7 @@ func pass_turn(player_index: int) -> void:
 	_passed[player_index] = true
 	player_passed.emit(player_index)
 	if _all_passed():
-		_resolve_battle(false)
+		_resolve_battle()
 	else:
 		_advance_turn()
 		
@@ -81,7 +84,7 @@ func _advance_turn() -> void:
 			_current_player = next
 			turn_changed.emit(_current_player)
 			return
-	_resolve_battle(false)
+	_resolve_battle()
 	
 func _all_passed() -> bool:
 	return _passed.all(func(p: bool) -> bool: return p)
@@ -90,7 +93,7 @@ func _recalculate_all() -> void:
 	for line in _lines:
 		line.strength_changed.emit(line.calculate_strength(_lines))
 		
-func _resolve_battle(surrender: bool) -> void:
+func _resolve_battle() -> void:
 	var strengths: Array[int] = []
 	for line in _lines:
 		strengths.append(line.calculate_strength(_lines))
