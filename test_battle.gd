@@ -1,21 +1,21 @@
 # test_battle.gd
 # run: godot --headless --script test_battle.gd
-# turn on auto play with AUTO_PLAY constant
 
 extends SceneTree
 
 const PLAYER_NAMES := ["Player 1", "Player 2", "Player 3", "Player 4"]
-const AUTO_PLAY := true
+const BOT_INDICES := [1, 2, 3]
 
 var _deck: Deck
 var _hands: Array[PlayerHand] = []
 var _battle: Battle
+var _bots: Dictionary = {}
 var _condottiere_player := 0
 var _battle_over := false
 
 func _init() -> void:
 	_deck = Deck.new()
-
+		
 	for i in PlayerHand.PLAYER_COUNT:
 		var hand := PlayerHand.new()
 		hand.add_cards(_deck.draw_many(10))
@@ -24,11 +24,18 @@ func _init() -> void:
 	_battle = Battle.new(_hands, _deck, _condottiere_player)
 	_battle.battle_ended.connect(_on_battle_ended)
 	_battle.bishop_played.connect(_on_bishop_played)
+	
+	for i in BOT_INDICES:
+		_bots[i] = BotPlayer.new(i, _battle, _hands[i])
+		_bots[i].action_taken.connect(_on_bot_action)
 
 	print("=== CONDOTTIERE — test round ===")
 	print("First turn: %s\n" % PLAYER_NAMES[_condottiere_player])
 
 	_game_loop()
+
+func _is_bot(player_index: int) -> bool:
+	return player_index in _bots
 
 func _game_loop() -> void:
 	while not _battle_over:
@@ -37,16 +44,20 @@ func _game_loop() -> void:
 		if _battle_over:
 			break
 
-		if AUTO_PLAY:
-			_auto_play(current)
+		if _is_bot(current):
+			_bots[current].take_turn()
+			if not _battle_over:
+				_print_strengths()
 			if _battle_over:
-				break
+				break 
+		
 		else:
 			print("Enter card number to play, 'p' to pass, 'q' to quit:")
 			var input := _read_line().strip_edges()
 
 			if input == "q":
 				quit()
+				return
 			elif input == "p":
 				_battle.pass_turn(current)
 				print("%s passes.\n" % PLAYER_NAMES[current])
@@ -98,15 +109,18 @@ func _handle_scarecrow(player_index: int) -> void:
 			_battle.apply_scarecrow(player_index, null)
 
 func _print_state(current: int) -> void:
-	print("--- Turn: %s ---" % PLAYER_NAMES[current])
-	print("Hand:")
-	var cards := _hands[current].get_cards()
-	for i in cards.size():
-		print("  %d. %s" % [i + 1, cards[i].display_name])
+	var label := "[BOT]" if _is_bot(current) else "[YOU]"
+	print("--- Turn: %s %s ---" % [PLAYER_NAMES[current], label])
+	if not _is_bot(current):
+		print("Hand:")
+		var cards := _hands[current].get_cards()
+		for i in cards.size():
+			print("  %d. %s" % [i + 1, cards[i].display_name])
 	print("Battle lines:")
 	for i in PlayerHand.PLAYER_COUNT:
 		var passed_str := " [passed]" if _battle.has_passed(i) else ""
-		print("  %s%s: strength %d" % [PLAYER_NAMES[i], passed_str, _battle.get_strength(i)])
+		var bot_str := " [BOT]" if _is_bot(i) else ""
+		print("  %s%s%s: strength %d" % [PLAYER_NAMES[i], bot_str, passed_str, _battle.get_strength(i)])
 	print("")
 
 func _print_strengths() -> void:
@@ -144,23 +158,9 @@ func _read_line() -> String:
 		if byte != "\r":	
 			line += byte
 	return line
-
-func _auto_play(player_index: int) -> void:
-	var cards := _hands[player_index].get_cards()
-	for card in cards:
-		if card.card_type != CardData.CardType.SCARECROW:
-			print("%s plays: %s" % [PLAYER_NAMES[player_index], card.display_name])
-			_battle.play_card(player_index, card)
-			if not _battle_over:
-				_print_strengths()
-			return
-	_battle.pass_turn(player_index)
-	if not _battle_over:
-		print("%s passes." % PLAYER_NAMES[player_index])
-	
 	
 func _on_bishop_played(player_index: int) -> void:
-	if AUTO_PLAY:
+	if _is_bot(player_index):
 		print("Auto: leaving off board.")
 		return
 	print("%s played Bishop. Enter region number (or 'n' to leave off board):" % PLAYER_NAMES[player_index])
@@ -169,3 +169,6 @@ func _on_bishop_played(player_index: int) -> void:
 		print("Favor of the Pope left off the board.")
 	else:
 		print("Favor of the Pope placed on region %s." % input)
+		
+func _on_bot_action(player_index: int, description: String) -> void:
+	print("%s %s" % [PLAYER_NAMES[player_index], description])	

@@ -105,3 +105,6 @@ func is_empty() -> bool:
 
 func size() -> int:
 	return _cards.size()
+	
+func has_drummer() -> bool:
+	return _has_drummer

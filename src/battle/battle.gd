@@ -163,3 +163,9 @@ func has_passed(player_index: int) -> bool:
 	
 func get_strength(player_index: int) -> int:
 	return _lines[player_index].calculate_strength(_lines)
+
+func has_winter() -> bool:
+	return _context.has_winter()
+	
+func has_spring() -> bool:
+	return _context.has_spring()
