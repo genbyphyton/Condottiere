@@ -6,11 +6,13 @@ signal card_removed(card: CardData)
 signal strength_changed(new_strength: int)
 
 var _cards: Array[CardData] = []
+var _faction: Faction = null
 var _has_drummer: bool = false
 var _context: BattleContext
 
-func _init(context: BattleContext) -> void:
+func _init(context: BattleContext, faction: Faction = null) -> void:
 	_context = context
+	_faction = faction
 	_context.season_changed.connect(_on_season_changed)
 
 func _on_season_changed() -> void:
@@ -23,6 +25,8 @@ func add_card(card: CardData) -> void:
 			_context.set_winter()
 		CardData.CardType.SPRING:
 			_context.set_spring()
+		CardData.CardType.AUTUMN:
+			_context.set_autumn()
 		CardData.CardType.DRUMMER:
 			_has_drummer = true
 	card_added.emit(card)
@@ -69,10 +73,10 @@ func calculate_strength(all_lines: Array[BattleLine] = []) -> int:
 	
 	for card in _cards:
 		if card.is_mercenary():
-			if _context.has_winter():
-				mercenary_strength += 1
-			else:
-				mercenary_strength += card.strength
+			var s := 1 if _context.has_winter() else card.strength
+			if _faction != null and _faction.is_scotland():
+				s += 1
+			mercenary_strength += s
 		elif card.is_special_unit():
 			special_strength += card.strength
 			
@@ -102,6 +106,11 @@ func get_cards() -> Array[CardData]:
 
 func is_empty() -> bool:
 	return _cards.is_empty()
+
+func is_face_down(card: CardData) -> bool:
+	if _faction == null or not _faction.is_england():
+		return false
+	return card.is_mercenary()
 
 func size() -> int:
 	return _cards.size()

@@ -11,9 +11,10 @@ const  MERCENARY_COUNTS: Dictionary = {
 }
 
 const SPECIAL_COUNTS: Dictionary = {
-	CardData.CardType.WINTER: 3,
-	CardData.CardType.SPRING: 3,
-	CardData.CardType.HEROINE: 3,
+	CardData.CardType.WINTER: 2,
+	CardData.CardType.SPRING: 2,
+	CardData.CardType.HEROINE: 2,
+	CardData.CardType.AUTUMN: 2,
 	CardData.CardType.SURRENDER: 3,
 	CardData.CardType.BISHOP: 6,
 	CardData.CardType.DRUMMER: 6,
@@ -36,6 +37,7 @@ static func build() -> Array[CardData]:
 	var names: Dictionary = {
 		CardData.CardType.WINTER: "Winter",
 		CardData.CardType.SPRING: "Spring",
+		CardData.CardType.AUTUMN: "Autumn",
 		CardData.CardType.HEROINE: "Heroine",
 		CardData.CardType.SURRENDER: "Surrender",
 		CardData.CardType.BISHOP: "Bishop",

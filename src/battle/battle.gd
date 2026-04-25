@@ -6,24 +6,30 @@ signal turn_changed(player_index: int)
 signal card_played(player_index: int, card: CardData)
 signal player_passed(player_index: int)
 signal bishop_played(player_index: int)
+signal ireland_ability_used(player_index: int)
+signal wales_ability_used(player_index: int)
+signal wales_pick_card(player_index: int, available_cards: Array[CardData])
 
 const PLAYER_COUNT := PlayerHand.PLAYER_COUNT
 
 var _context: BattleContext
 var _lines: Array[BattleLine] = []
 var _hands: Array[PlayerHand] = []
+var _factions: Array[Faction] = []
 var _passed: Array[bool] = []
 var _current_player: int = 0
 var _deck: Deck
 
-func _init(hands: Array[PlayerHand], deck: Deck, condottiere_player: int) -> void:
+func _init(hands: Array[PlayerHand], deck: Deck, condottiere_player: int, factions: Array[Faction] = []) -> void:
 	_context = BattleContext.new()
 	_hands = hands
+	_factions = factions
 	_deck = deck
 	_current_player = condottiere_player
 	_context.season_changed.connect(_on_season_changed)
 	for i in PLAYER_COUNT:
-		_lines.append(BattleLine.new(_context))
+		var faction: Faction = factions[i] if i < factions.size() else null
+		_lines.append(BattleLine.new(_context, faction))
 		_passed.append(false)
 		
 func _on_season_changed() -> void:
@@ -34,6 +40,10 @@ func play_card(player_index: int, card: CardData) -> bool:
 		return false
 	if not _hands[player_index].has_card(card):
 		return false
+	
+	if _context.has_autumn():
+		if card.card_type == CardData.CardType.SCARECROW or card.card_type == CardData.CardType.SURRENDER:
+			return false
 	
 	match card.card_type:
 		CardData.CardType.SURRENDER:
@@ -146,9 +156,67 @@ func get_condottiere_token_receiver(winner_index: int) -> int:
 
 	return courtesan_winners[0]
 	
+func use_wales_ability(player_index: int) -> bool:
+	var faction := get_faction(player_index)
+	if faction == null or not faction.is_wales():
+		return false
+	if not faction.can_use_ability():
+		return false
+	if not _context.has_winter() and not _context.has_spring() and not _context.has_autumn():
+		return false
+	_context.reset()
+	faction.mark_ability_used()
+	wales_ability_used.emit(player_index)
+	_recalculate_all()
+	return true
+	
+func use_ireland_ability(player_index: int, target_card: CardData, target_player: int, card_from_hand: CardData) -> bool:
+	var faction := get_faction(player_index)
+	if faction == null or not faction.is_ireland():
+		return false
+	if not faction.can_use_ability():
+		return false
+	if target_player == player_index:
+		return false
+	if not _lines[target_player].get_cards().has(target_card):
+		return false
+	if not _hands[player_index].has_card(card_from_hand):
+		return false
+	_lines[target_player].remove_card(target_card)
+	_lines[player_index].add_card(target_card)
+	_hands[player_index].discard_card(card_from_hand, _deck)
+	_lines[target_player].add_card(card_from_hand)
+	faction.mark_ability_used()
+	ireland_ability_used.emit(player_index)
+	_recalculate_all()
+	return true
+	
+func wales_save_card(player_index: int, card: CardData) -> void:
+	var faction := get_faction(player_index)
+	if faction == null or not faction.is_wales():
+		return
+	faction.save_card(card)
+	
 func end_battle() -> void:
+	for i in PLAYER_COUNT:
+		var faction := get_faction(i)
+		if faction != null and faction.is_wales():
+			var all_cards: Array[CardData] = []
+			for line in _lines:
+				all_cards.append_array(line.get_cards())
+			if not all_cards.is_empty():
+				wales_pick_card.emit(i, all_cards)
+				
+	var saved_cards: Array[CardData] = []
+	for i in PLAYER_COUNT:
+		var faction := get_faction(i)
+		if faction != null and faction.is_wales() and faction.has_saved_card():
+			saved_cards.append(faction._saved_card)
+			
 	for line in _lines:
 		var cards := line.clear()
+		for saved_card in saved_cards:
+			cards.erase(saved_card)
 		_deck.discard_many(cards)
 	_context.reset()
 	
@@ -163,9 +231,17 @@ func has_passed(player_index: int) -> bool:
 	
 func get_strength(player_index: int) -> int:
 	return _lines[player_index].calculate_strength(_lines)
+	
+func get_faction(player_index: int) -> Faction:
+	if player_index < _factions.size():
+		return _factions[player_index]
+	return null
 
 func has_winter() -> bool:
 	return _context.has_winter()
 	
 func has_spring() -> bool:
 	return _context.has_spring()
+	
+func has_autumn() -> bool:
+	return _context.has_autumn()

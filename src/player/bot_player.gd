@@ -6,17 +6,26 @@ signal action_taken(player_index: int, description: String)
 var _player_index: int
 var _battle: Battle
 var _hand: PlayerHand
+var _faction: Faction = null
 
-func _init(player_index: int, battle: Battle, hand: PlayerHand) -> void:
+func _init(player_index: int, battle: Battle, hand: PlayerHand, faction: Faction = null) -> void:
 	_player_index = player_index
 	_battle = battle
 	_hand = hand
+	_faction = faction
 	
 func take_turn() -> void:
 	var cards := _hand.get_cards()
 	if cards.is_empty():
 		action_taken.emit(_player_index, "passes (no cards)")
 		_battle.pass_turn(_player_index)
+		return
+		
+	if _try_wales_ability():
+		action_taken.emit(_player_index, "uses Wales ability: clears weather")
+		return
+	if _try_ireland_ability():
+		action_taken.emit(_player_index, "uses Ireland ability: steals a card")
 		return
 		
 	var my_strength := _battle.get_strength(_player_index)
@@ -69,6 +78,9 @@ func pick_card(my_strength: int, max_enemy_strength: int) -> CardData:
 						return card
 				CardData.CardType.SPRING:
 					if _has_highest_mercenary() and not _battle.has_spring():
+						return card
+				CardData.CardType.AUTUMN:
+					if not _has_highest_mercenary() and not _battle.has_autumn() and _battle.has_spring():
 						return card
 				CardData.CardType.HEROINE:
 					if gap > 0:
@@ -133,6 +145,63 @@ func _should_play_bishop(lines: Array[BattleLine]) -> bool:
 				max_strength = card.strength
 				max_owner = i
 	return max_owner != _player_index and max_strength > 0
+	
+func _try_wales_ability() -> bool:
+	if _faction == null or not _faction.is_wales():
+		return false
+	if not _faction.can_use_ability():
+		return false
+	if _battle.has_winter() and _has_mercenaries_in_line():
+		var my_count := _battle.get_line(_player_index).get_cards().filter(
+			func(c: CardData) -> bool: return c.is_mercenary()
+		).size()
+		var enemy_count := 0
+		for i in PlayerHand.PLAYER_COUNT:
+			if i != _player_index:
+				enemy_count += _battle.get_line(i).get_cards().filter(
+					func(c: CardData) -> bool: return c.is_mercenary()
+				).size()
+		if my_count >= enemy_count:
+			return _battle.use_wales_ability(_player_index)
+	
+	if _battle.has_spring() and not _has_highest_mercenary():
+		return _battle.use_wales_ability(_player_index)
+	if _battle.has_autumn():
+		var has_blocked_card := _hand.get_cards().any(
+			func(c: CardData) -> bool:
+				return c.card_type == CardData.CardType.SCARECROW or \
+					c.card_type == CardData.CardType.SURRENDER
+		)
+		if has_blocked_card:
+			return _battle.use_wales_ability(_player_index)
+	return false
+	
+func _try_ireland_ability() -> bool:
+	if _faction == null or not _faction.is_ireland():
+		return false
+	if not _faction.can_use_ability():
+		return false
+	var best_card: CardData = null
+	var best_owner := -1
+	for i in PlayerHand.PLAYER_COUNT:
+		if i == _player_index:
+			continue
+		for card in _battle.get_line(i).get_cards():
+			if card.is_mercenary():
+				if best_card == null or card.strength > best_card.strength:
+					best_card = card
+					best_owner = i
+	if best_card == null:
+		return false
+	var weakest: CardData = null
+	for card in _hand.get_cards():
+		if weakest == null or card.strength < weakest.strength:
+			weakest = card
+	if weakest == null:
+		return false
+	if best_card.strength <= weakest.strength:
+		return false
+	return _battle.use_ireland_ability(_player_index, best_card, best_owner, weakest)
 	
 func _get_max_enemy_strength() -> int:
 	var max_strength := 0

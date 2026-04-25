@@ -9,6 +9,7 @@ enum CardType {
 	BISHOP,
 	WINTER,
 	SPRING,
+	AUTUMN,
 	SCARECROW,
 	SURRENDER,
 }
