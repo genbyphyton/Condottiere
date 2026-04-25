@@ -1,99 +1,109 @@
-# Condottiere
+# Mercenary
 
-<h1>GDD</h1>
-Mercenary  
- 
-Game Summary 
+> A 2–4 player digital area control card strategy game set in the medieval British Isles.
 
-~~~
-Game Process 
+---
 
-Game Objective
+## Overview
 
-Phase:
-Kick Off Phase
-Player chooses one of 4 factions.
-One of 4 players randomly gets chosen to play first
-Battle Phase
- Player places a Conquer Token on a desired location.
-The player who placed Conquer Token token starts the round first
-Place one card face up on the battlefield.
-	~A player’s total strength is the sum of the strength values of all of the cards in his battle line, taking into account any modifications caused by special cards
-	~Note that players are never required to play a card in a battle. That is, a player can choose to pass on any of his turns. 
-~Pass: if the player passes the turn he is officially excluding himself from further card addition simply waiting for the end of battle.
+Mercenary is a digital adaptation of the board game **Condottieri**, rebuilt with revised core rules and set across 16 regions of the British Isles. Players choose a faction, deploy mercenary armies through card battles, and fight to conquer territory.
 
-Concluding a Battle ,Players continue taking turns, choosing to either play a card or pass, until either all the players have passed or one player plays a “Surrender” card. Then the battle is concluded.
-Comparison Phase
+---
 
-All players announce the total strength of their battle lines. The player with the strongest battle line conquers the region. He then places one of his control markers on the conquered region and receives the Conquer token.	
+## Built With
 
+- **Engine:** Godot 4
+- **Version Control:** Git / GitHub
+- **Genre:** Area Control / Card Strategy
+- **Players:** 2–4
+- **Play Time:** 30–60 minutes
 
+---
 
+## How to Win
 
+- Control **5 total regions**, or
+- Control **3 adjacent regions**
 
+---
 
-Factions
+## Factions
 
-Each faction holds a special passive ability than can be used every Battle Phjas
+| Faction | Ability | Description |
+|---------|---------|-------------|
+| Scotland | Highland Morale | +2 to all Mercenary cards during Counting Phase |
+| Ireland | Spy Work | Exchange any card from opponent's battlefield with one of yours |
+| Wales | Storm Control | Discard all active weather cards from the battlefield |
+| England | Bluff | All played cards are placed face down until Counting Phase |
 
-Scotland
+---
 
-Scotland holds an to add +2 to all mercenaries on Counting Phase
-Ireland
-Ireland holds an ability to exchange any card from the opponent's battlefield for one of his cards. 
-Whales
-Whales holds an ability to discard all weather abilities applied on the battlefield
-England
+## Card Types
 
-England holds an ability to place all of the used cards face down on the battlefield up until counting phase 
+| Card | Count | Effect |
+|------|-------|--------|
+| Mercenary (1) | 10 | Strength 1 |
+| Mercenary (2–6) | 8 each | Strength 2–6 |
+| Mercenary (10) | 8 | Strength 10 |
+| Winter | 2 | All Mercenaries count as strength 1 |
+| Spring | 2 | +3 to highest strength Mercenaries |
+| Autumn | 2 | Scarecrow and Surrender cards cannot be used |
+| Bishop | 3 | Discards all highest-strength Mercenaries; grants Favor of the Pope |
+| Courtesan | 12 | Most Courtesans = receive Conquer Token instead of battle winner |
+| Drummer | 6 | Doubles printed strength of all Mercenaries in your battle line |
+| Heroine | 3 | Strength 10, unaffected by any modifiers |
+| Scarecrow | 16 | Retrieve one of your Mercenaries from the battlefield to hand |
+| Surrender | 3 | Ends battle immediately; current leader wins |
 
+---
 
+## Ability Resolution Order
 
+1. Surrender
+2. Bishop
+3. Scarecrow
+4. Drummer
+5. Winter / Spring / Autumn
+6. Faction Abilities
+7. Courtesan
 
+---
 
-Cards
+## Map — 16 Regions
 
-Main Cards
-Mercenary - Mercenary cards are the most common type of strength-providing 
-Season Cards:
+| # | Territory | Adjacent Regions |
+|---|-----------|-----------------|
+| 1 | Highland | Lowland, Strathclyde |
+| 2 | Lowland | Highland, Strathclyde, Dunwall |
+| 3 | Strathclyde | Lowland, Highland, Northumbria |
+| 4 | Northumbria | Strathclyde, Ulster, Mercia, East Anglia |
+| 5 | Connacht | Northumbria, Mercia, Kent |
+| 6 | Ulster | Northumbria, East Anglia, Wales, Wessex |
+| 7 | Leinster | Mercia, Wessex |
+| 8 | Munster | East Anglia, Wessex |
+| 9 | Mercia | Leinster, East Anglia, Wessex |
+| 10 | East Anglia | Leinster, Munster, Mercia, Wales, Wessex, Kent |
+| 11 | Wales | Munster, East Anglia, Kent |
+| 12 | Wessex | Mercia, East Anglia, Kent |
+| 13 | Kent | East Anglia, Wales, Wessex |
+| 14 | Dunwall *(fictional)* | Cornwall, Velen, Lowland |
+| 15 | Cornwall | Dunwall, Velen |
+| 16 | Velen *(fictional)* | Dunwall, Cornwall |
 
+---
 
-Winter:
- When a Winter card is in play when a battle is concluded, all Mercenary cards are considered to have a printed strength of 1.
-~When a Winter card is played, immediately discard all Spring cards in play.
-Spring:
- When a Spring card is in play when a battle is concluded, each player adds 3 strength to each of his Mercenary cards that is among the highest strength Mercenaries in play.
-~When a Spring card is played, immediately discard all Winter cards in plays.
+## Team
 
+| Role | Name |
+|------|------|
+| Game Designer / Team Lead | Omar Aslan |
+| Lead Programmer / Game Designer | Igor |
+| Programmer | Togzhan |
+| Narrative Writer / Artist | Konstantine Maslov |
+| UI / Artist | Ayana Kasenova |
 
-Special Cards:
-Bishop:
-When a Bishop card is played, all of the highest-strength Mercenary card(s) in play are discarded.
+---
 
-The player who played the Bishop card then
-receives the Favor of the Pope token, and must
-immediately decide whether to place it on a region
-that does not contain a control marker or leave the
-token off the game board.
-The Condottiere token may not be placed on any
-region that has the favor of the Pope. The Favor of
-the Pope token represents the Church intervening
-on the region’s behalf and ensuring that no battles
-are fought there.
+## License
 
-Courtesan:
- 
-
-Drummer:
-
-Heroine:
-
-Scarecrow:
-
-Surrender:
-
-Map
-
-Location:
-
-
+This project is developed for educational purposes.
