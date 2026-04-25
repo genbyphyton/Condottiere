@@ -71,6 +71,10 @@ Mercenary is a digital adaptation of the board game **Condottieri**, rebuilt wit
 
 ---
 
+
+<img width="391" height="460" alt="Untitled-1" src="https://github.com/user-attachments/assets/0c0a3ecf-ae2b-43fa-b8d2-89bc4f06a22b" />
+
+
 ## Map — 16 Regions
 
 | # | Territory | Adjacent Regions |
