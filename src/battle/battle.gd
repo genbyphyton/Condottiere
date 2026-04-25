@@ -5,6 +5,7 @@ signal battle_ended(winner_index: int)
 signal turn_changed(player_index: int)
 signal card_played(player_index: int, card: CardData)
 signal player_passed(player_index: int)
+signal bishop_played(player_index: int)
 
 const PLAYER_COUNT := PlayerHand.PLAYER_COUNT
 
@@ -42,6 +43,7 @@ func play_card(player_index: int, card: CardData) -> bool:
 			_hands[player_index].play_card(card, _lines[player_index])
 			_lines[player_index].apply_bishop(_lines)
 			card_played.emit(player_index, card)
+			bishop_played.emit(player_index)
 			_recalculate_all()
 			_advance_turn()
 		CardData.CardType.SCARECROW:
@@ -77,13 +79,21 @@ func _can_act(player_index: int) -> bool:
 	)
 	
 func _advance_turn() -> void:
+	var checked := 0
 	var next := _current_player
-	for i in PLAYER_COUNT:
+	while checked < PLAYER_COUNT:
 		next = (next + 1) % PLAYER_COUNT
-		if not _passed[next] and not _hands[next].is_empty():
-			_current_player = next
-			turn_changed.emit(_current_player)
-			return
+		checked += 1
+		if _passed[next]:
+			continue
+		if _hands[next].is_empty():
+			_passed[next] = true
+			player_passed.emit(next)
+			checked = 0
+			continue
+		_current_player = next
+		turn_changed.emit(_current_player)
+		return
 	_resolve_battle()
 	
 func _all_passed() -> bool:

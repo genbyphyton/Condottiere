@@ -25,4 +25,3 @@ func has_spring() -> bool:
 func reset() -> void:
 	_has_winter = false
 	_has_spring = false
-	season_changed.emit()

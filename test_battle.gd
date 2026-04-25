@@ -1,9 +1,11 @@
 # test_battle.gd
 # run: godot --headless --script test_battle.gd
+# turn on auto play with AUTO_PLAY constant
 
 extends SceneTree
 
 const PLAYER_NAMES := ["Player 1", "Player 2", "Player 3", "Player 4"]
+const AUTO_PLAY := true
 
 var _deck: Deck
 var _hands: Array[PlayerHand] = []
@@ -21,6 +23,7 @@ func _init() -> void:
 
 	_battle = Battle.new(_hands, _deck, _condottiere_player)
 	_battle.battle_ended.connect(_on_battle_ended)
+	_battle.bishop_played.connect(_on_bishop_played)
 
 	print("=== CONDOTTIERE — test round ===")
 	print("First turn: %s\n" % PLAYER_NAMES[_condottiere_player])
@@ -31,36 +34,44 @@ func _game_loop() -> void:
 	while not _battle_over:
 		var current := _battle.get_current_player()
 		_print_state(current)
+		if _battle_over:
+			break
 
-		print("Enter card number to play, 'p' to pass, 'q' to quit:")
-		var input := _read_line().strip_edges()
-
-		if input == "q":
-			quit()
-		elif input == "p":
-			_battle.pass_turn(current)
-			print("%s passes.\n" % PLAYER_NAMES[current])
-		elif input.is_valid_int():
-			var idx := input.to_int() - 1
-			var cards := _hands[current].get_cards()
-			if idx < 0 or idx >= cards.size():
-				print("Invalid card number.\n")
-				continue
-			var card := cards[idx]
-
-			if card.card_type == CardData.CardType.SCARECROW:
-				if not _battle.play_card(current, card):
-					print("Cannot play this card.\n")
-					continue
-				_handle_scarecrow(current)
-			else:
-				if not _battle.play_card(current, card):
-					print("Cannot play this card.\n")
-					continue
-
-			_print_strengths()
+		if AUTO_PLAY:
+			_auto_play(current)
+			if _battle_over:
+				break
 		else:
-			print("Invalid input.\n")
+			print("Enter card number to play, 'p' to pass, 'q' to quit:")
+			var input := _read_line().strip_edges()
+
+			if input == "q":
+				quit()
+			elif input == "p":
+				_battle.pass_turn(current)
+				print("%s passes.\n" % PLAYER_NAMES[current])
+			elif input.is_valid_int():
+				var idx := input.to_int() - 1
+				var cards := _hands[current].get_cards()
+				if idx < 0 or idx >= cards.size():
+					print("Invalid card number.\n")
+					continue
+				var card := cards[idx]
+
+				if card.card_type == CardData.CardType.SCARECROW:
+					if not _battle.play_card(current, card):
+						print("Cannot play this card.\n")
+						continue
+					if not _battle_over:
+						_handle_scarecrow(current)
+				else:
+					if not _battle.play_card(current, card):
+						print("Cannot play this card.\n")
+						continue
+				if not _battle_over:
+					_print_strengths()
+			else:
+				print("Invalid input.\n")
 
 func _handle_scarecrow(player_index: int) -> void:
 	var line_cards := _battle.get_line(player_index).get_cards().filter(
@@ -128,7 +139,33 @@ func _read_line() -> String:
 	var line := ""
 	while true:
 		var byte := OS.read_string_from_stdin(1)
-		if byte == "\n" or byte == "\r" or byte == "":
+		if byte == "\n" or byte == "":
 			break
-		line += byte
+		if byte != "\r":	
+			line += byte
 	return line
+
+func _auto_play(player_index: int) -> void:
+	var cards := _hands[player_index].get_cards()
+	for card in cards:
+		if card.card_type != CardData.CardType.SCARECROW:
+			print("%s plays: %s" % [PLAYER_NAMES[player_index], card.display_name])
+			_battle.play_card(player_index, card)
+			if not _battle_over:
+				_print_strengths()
+			return
+	_battle.pass_turn(player_index)
+	if not _battle_over:
+		print("%s passes." % PLAYER_NAMES[player_index])
+	
+	
+func _on_bishop_played(player_index: int) -> void:
+	if AUTO_PLAY:
+		print("Auto: leaving off board.")
+		return
+	print("%s played Bishop. Enter region number (or 'n' to leave off board):" % PLAYER_NAMES[player_index])
+	var input := _read_line().strip_edges()
+	if input == "n":
+		print("Favor of the Pope left off the board.")
+	else:
+		print("Favor of the Pope placed on region %s." % input)

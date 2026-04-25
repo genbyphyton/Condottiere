@@ -37,7 +37,7 @@ static func build() -> Array[CardData]:
 		CardData.CardType.WINTER: "Winter",
 		CardData.CardType.SPRING: "Spring",
 		CardData.CardType.HEROINE: "Heroine",
-		CardData.CardType.SURRENDER: "Scarecrow",
+		CardData.CardType.SURRENDER: "Surrender",
 		CardData.CardType.BISHOP: "Bishop",
 		CardData.CardType.DRUMMER: "Drummer",
 		CardData.CardType.COURTESAN: "Courtesan",
@@ -47,10 +47,11 @@ static func build() -> Array[CardData]:
 	for type in SPECIAL_COUNTS:
 		var count: int = SPECIAL_COUNTS[type]
 		for i in count:
-			deck.append(CardData.new(
-				type,
-				0,
-				names[type]
-			))
+			var strength := 0
+			if type == CardData.CardType.COURTESAN:
+				strength = 1
+			elif type == CardData.CardType.HEROINE:
+				strength = 10
+			deck.append(CardData.new(type, strength, names[type]))
 			
 	return deck
