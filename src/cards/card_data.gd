@@ -27,3 +27,6 @@ func is_mercenary() -> bool:
 	
 func is_special_card() -> bool:
 	return card_type != CardType.MERCENARY
+	
+func is_special_unit() -> bool:
+	return card_type in [CardType.HEROINE, CardType.COURTESAN]
