@@ -100,7 +100,7 @@ Mercenary is a digital adaptation of the board game **Condottieri**, rebuilt wit
 | Role | Name |
 |------|------|
 | Game Designer / Team Lead | Omar Aslan |
-| Lead Programmer / Game Designer | Igor |
+| Lead Programmer / Game Designer | Igor Chsheglov |
 | Programmer | Togzhan Tleugali |
 | Narrative Writer / Artist | Konstantin Maslov |
 | UI / Artist | Ayana Kassenova |
