@@ -12,5 +12,6 @@ func setup(winner_index: int) -> void:
 	)
 
 func _ready() -> void:
+	MusicController.victory_play()
 	var winner := GameState.get_last_winner()
 	setup(winner)	

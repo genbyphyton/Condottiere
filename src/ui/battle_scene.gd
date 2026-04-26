@@ -21,11 +21,8 @@ var _processing_card: bool = false
 var _handling_turn: bool = false
 
 func _ready() -> void:
-	print("BattleScene ready")
-	print("GameState: ", GameState)
-	print("Battle from GameState: ", GameState.get_battle())
+	MusicController.second_play()
 	_battle = GameState.get_battle()
-	print("Battle: ", _battle)
 	_player_index = 0
 
 	_battle.battle_ended.connect(_on_battle_ended)
@@ -81,7 +78,6 @@ func _update_battle_lines() -> void:
 		_strength_labels[i].text = "%s: %s" % [PLAYER_NAMES[i], strength_display]
 
 func _update_hand() -> void:
-	print("Update hand, is_player_turn: ", _is_player_turn)
 	for child in hand_container.get_children():
 		child.queue_free()
 	if not _is_player_turn:
@@ -129,11 +125,10 @@ func _on_faction_pressed() -> void:
 		_show_ireland_popup()
 
 func _on_turn_changed(player_index: int) -> void:
-	if _handling_turn and player_index == _player_index:
-		return
-	print("Turn changed to player: ", player_index)
 	label_turn.text = "Turn: %s" % PLAYER_NAMES[player_index]
 	if player_index == _player_index:
+		if _is_player_turn:
+			return
 		_is_player_turn = true
 		_update_hand()
 		_update_faction_button()
@@ -295,7 +290,6 @@ func _show_wales_popup(available_cards: Array[CardData]) -> void:
 		popup_container.add_child(btn)
 
 func _on_battle_ended(winner_index: int) -> void:
-	print("Battle ended, winner: ", winner_index)
 	await get_tree().create_timer(1.0).timeout
 	if not is_inside_tree():
 		return

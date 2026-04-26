@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://72n848hercd1"
+path="res://.godot/imported/Percival Schuttenbach - The Nightingale.mp3-cc46446c589462092d614e1e79a33baa.mp3str"
+
+[deps]
+
+source_file="res://audio/Percival Schuttenbach - The Nightingale.mp3"
+dest_files=["res://.godot/imported/Percival Schuttenbach - The Nightingale.mp3-cc46446c589462092d614e1e79a33baa.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

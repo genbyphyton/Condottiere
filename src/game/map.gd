@@ -3,9 +3,9 @@ extends Node2D
 
 const PLAYER_COLORS: Array[Color] = [
 	Color(0.2, 0.5, 1.0, 0.45),
-	Color(1.0, 0.2, 0.2, 0.45),
+	Color(0.816, 0.0, 0.031, 0.451),
 	Color(0.2, 0.8, 0.2, 0.45),
-	Color(0.98, 0.784, 0.784, 0.451),
+	Color(0.91, 0.961, 0.102, 0.451),
 ]
 const PONTIFF_COLOR := Color(1.0, 1.0, 1.0, 0.6)
 const NEUTRAL_COLOR := Color(0.3, 0.3, 0.3, 0.5)
@@ -18,6 +18,7 @@ var _selected_region_name: String = ""
 @onready var map_ui: MapUI = $"../UILayer/UI"
 
 func _ready() -> void:
+	MusicController.first_play()
 	_create_visual_polygons()
 	GameState.region_captured.connect(_on_region_captured)
 	GameState.pontiff_moved.connect(_on_pontiff_moved)
@@ -46,18 +47,15 @@ func _input(event: InputEvent) -> void:
 			continue
 		var local_pos := collision.to_local(mouse_pos)
 		if Geometry2D.is_point_in_polygon(local_pos, collision.polygon):
-			print("CLICKED: ", region_name)
 			region_clicked.emit(region_name)
 			return
 
 func _create_visual_polygons() -> void:
 	for region_name in RegionData.REGIONS:
 		var area := get_node_or_null(region_name) as Area2D
-		print("Area: ", region_name, " = ", area)
 		if area == null:
 			continue
 		var collision := area.get_node_or_null(region_name)
-		print("Collision: ", collision)
 		if collision == null:
 			continue
 		var poly := Polygon2D.new()
@@ -65,13 +63,10 @@ func _create_visual_polygons() -> void:
 		poly.polygon = collision.polygon
 		poly.color = NEUTRAL_COLOR
 		area.add_child(poly)
-		print("Added Polygon2D to ", region_name)
 		_polygons[region_name] = poly
 
 func _on_area_2d_input_event(_viewport, event, _shape_idx, region_name: String) -> void:
-	print("Event: ", event, " region: ", region_name)
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		print("CLICKED: ", region_name)
 		region_clicked.emit(region_name)
 
 func highlight_region(region_name: String, player_index: int) -> void:

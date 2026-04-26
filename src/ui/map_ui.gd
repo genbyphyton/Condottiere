@@ -11,7 +11,6 @@ extends Control
 var _selected_region: String = ""
 
 func _ready() -> void:
-	print("Connecting battle button")
 	battle_button.pressed.connect(_on_battle_button_pressed)
 	if GameState.is_game_over():
 		await get_tree().create_timer(0.5).timeout
@@ -20,7 +19,7 @@ func _ready() -> void:
 	GameState.game_over.connect(_on_game_over)
 	GameState.region_captured.connect(_on_region_captured)
 	GameState.battle_started.connect(_on_battle_started)
-	GameState.round_ended.connect(_update_ui)
+	GameState.round_ended.connect(_on_round_ended)
 	battle_button.disabled = true
 	_update_ui()
 	_create_stats_labels()
@@ -48,6 +47,10 @@ func set_selected_region(region_name: String) -> void:
 		action_label.text = "Select a region to attack"
 		battle_button.disabled = true
 		return
+	if GameState.get_hand(0).is_empty():
+		action_label.text = "No cards left this round"
+		battle_button.disabled = true
+		return
 	if not GameState.can_attack(region_name):
 		action_label.text = "%s — cannot attack" % region_name
 		battle_button.disabled = true
@@ -61,10 +64,7 @@ func _on_battle_button_pressed() -> void:
 	if GameState.get_hand(0).is_empty():
 		action_label.text = "No cards left this round!"
 		return
-	print("Before start_battle")
-	var success := GameState.start_battle(_selected_region)
-	print("After start_battle, success: ", success)
-	print("Battle: ", GameState.get_battle())
+	var success := GameState.start_battle(_selected_region, 0)
 	if success:
 		get_tree().change_scene_to_file("res://scenes/battle_scene.tscn")
 	else:
@@ -75,7 +75,14 @@ func _on_region_captured(region_name: String, player_index: int) -> void:
 
 func _on_battle_started(region_name: String) -> void:
 	action_label.text = "Battle: %s" % region_name
-	
+
+func _on_round_ended() -> void:
+	_update_ui()
+	if _selected_region != "":
+		set_selected_region(_selected_region)
+	else:
+		action_label.text = "Select a region to attack"
+
 func _on_game_over(winner_index: int) -> void:
 	await get_tree().create_timer(1.0).timeout
 	get_tree().change_scene_to_file("res://scenes/victory_scene.tscn")

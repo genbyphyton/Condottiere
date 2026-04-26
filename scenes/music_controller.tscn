@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://ctkf721ltaft8"]
+
+[ext_resource type="Script" uid="uid://cjdx5l8vppbuu" path="res://src/audio/music_controller.gd" id="1_nuwea"]
+[ext_resource type="AudioStream" uid="uid://cwjg4fa1y6d5t" path="res://audio/Percival Schuttenbach - Cloak And Dagger.mp3" id="2_a2hxn"]
+
+[node name="MusicController" type="Node2D" unique_id=2014653439]
+script = ExtResource("1_nuwea")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=2076559274]
+stream = ExtResource("2_a2hxn")
