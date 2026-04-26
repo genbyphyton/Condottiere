@@ -23,10 +23,8 @@ func take_turn() -> void:
 		
 	if _try_wales_ability():
 		action_taken.emit(_player_index, "uses Wales ability: clears weather")
-		return
 	if _try_ireland_ability():
 		action_taken.emit(_player_index, "uses Ireland ability: steals a card")
-		return
 		
 	var my_strength := _battle.get_strength(_player_index)
 	var max_enemy_strength := _get_max_enemy_strength()

@@ -1,0 +1,109 @@
+[gd_scene format=3 uid="uid://ckj1gui3ds1ek"]
+
+[ext_resource type="Script" uid="uid://m80l68gxgkyb" path="res://src/ui/battle_scene.gd" id="1_idkgt"]
+
+[node name="BattleScene" type="Control" unique_id=451888478]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_idkgt")
+
+[node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=699166623]
+layer = -1
+
+[node name="Background" type="Sprite2D" parent="BackgroundLayer" unique_id=2139318481]
+
+[node name="TopPanel" type="PanelContainer" parent="." unique_id=1388683606]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 50.0
+grow_horizontal = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TopPanel" unique_id=1967078748]
+layout_mode = 2
+
+[node name="LabelRegion" type="Label" parent="TopPanel/HBoxContainer" unique_id=84607179]
+layout_mode = 2
+text = "Battle for:"
+
+[node name="LabelTurn" type="Label" parent="TopPanel/HBoxContainer" unique_id=779793509]
+layout_mode = 2
+text = "Turn:"
+
+[node name="BattleLines" type="VBoxContainer" parent="." unique_id=1186552717]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.05
+anchor_right = 1.0
+anchor_bottom = 0.7
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Player1Line" type="HBoxContainer" parent="BattleLines" unique_id=1832367476]
+layout_mode = 2
+
+[node name="Player2Line" type="HBoxContainer" parent="BattleLines" unique_id=547264998]
+layout_mode = 2
+
+[node name="Player3Line" type="HBoxContainer" parent="BattleLines" unique_id=1292526242]
+layout_mode = 2
+
+[node name="Player4Line" type="HBoxContainer" parent="BattleLines" unique_id=1798485400]
+layout_mode = 2
+
+[node name="BottomPanel" type="PanelContainer" parent="." unique_id=1680711038]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.7
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="BottomPanel" unique_id=999999999]
+layout_mode = 2
+
+[node name="HandContainer" type="HBoxContainer" parent="BottomPanel/VBoxContainer" unique_id=1919215368]
+layout_mode = 2
+
+[node name="ActionButtons" type="HBoxContainer" parent="BottomPanel/VBoxContainer" unique_id=1767851762]
+layout_mode = 2
+
+[node name="ButtonPass" type="Button" parent="BottomPanel/VBoxContainer/ActionButtons" unique_id=197535402]
+layout_mode = 2
+text = "Pass"
+
+[node name="ButtonFaction" type="Button" parent="BottomPanel/VBoxContainer/ActionButtons" unique_id=338322442]
+layout_mode = 2
+
+[node name="FactionPopup" type="Control" parent="." unique_id=1340903711]
+visible = false
+z_index = 10
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -250.0
+offset_right = 250.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="FactionPopup" unique_id=111111111]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FactionPopup/PanelContainer" unique_id=222222222]
+custom_minimum_size = Vector2(380, 380)
+layout_mode = 2

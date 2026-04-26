@@ -11,8 +11,13 @@ config_version=5
 [application]
 
 config/name="Condottiere"
+run/main_scene="uid://dvkwq7mavl6ph"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameState="*uid://cwdiystotcsty"
 
 [physics]
 

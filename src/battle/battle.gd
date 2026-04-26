@@ -21,16 +21,21 @@ var _current_player: int = 0
 var _deck: Deck
 
 func _init(hands: Array[PlayerHand], deck: Deck, condottiere_player: int, factions: Array[Faction] = []) -> void:
+	print("Battle init complete, current player: ", _current_player)
+	print("Passed: ", _passed)
 	_context = BattleContext.new()
 	_hands = hands
 	_factions = factions
 	_deck = deck
 	_current_player = condottiere_player
 	_context.season_changed.connect(_on_season_changed)
-	for i in PLAYER_COUNT:
+	print("PLAYER_COUNT: ", PlayerHand.PLAYER_COUNT)
+	print("hands size: ", hands.size())
+	for i in hands.size():
 		var faction: Faction = factions[i] if i < factions.size() else null
 		_lines.append(BattleLine.new(_context, faction))
 		_passed.append(false)
+	print("After loop, passed: ", _passed)
 		
 func _on_season_changed() -> void:
 	_recalculate_all()
@@ -72,6 +77,7 @@ func apply_scarecrow(player_index: int, card_to_retrieve: CardData) -> bool:
 	return _lines[player_index].apply_scarecrow(card_to_retrieve, _hands[player_index])
 	
 func pass_turn(player_index: int) -> void:
+	print("pass_turn called for: ", player_index, " stack: ", get_stack())
 	if player_index != _current_player or _passed[player_index]:
 		return
 	_passed[player_index] = true
@@ -89,6 +95,10 @@ func _can_act(player_index: int) -> bool:
 	)
 	
 func _advance_turn() -> void:
+	print("Advance turn from: ", _current_player)
+	print("Passed: ", _passed)
+	for i in _hands.size():
+		print("  P%d hand: %d cards" % [i, _hands[i].size()])
 	var checked := 0
 	var next := _current_player
 	while checked < PLAYER_COUNT:
@@ -114,6 +124,7 @@ func _recalculate_all() -> void:
 		line.strength_changed.emit(line.calculate_strength(_lines))
 		
 func _resolve_battle() -> void:
+	print("RESOLVE BATTLE CALLED, stack: ", get_stack())
 	var strengths: Array[int] = []
 	for line in _lines:
 		strengths.append(line.calculate_strength(_lines))

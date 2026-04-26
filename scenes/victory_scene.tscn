@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://da3eagn3hrcxs"]
+
+[ext_resource type="Script" uid="uid://br0g0r268aw5c" path="res://src/ui/victory_scene.gd" id="1_sl7wn"]
+[ext_resource type="Texture2D" uid="uid://d22s3b0a8cgd8" path="res://assets/textures/oldpaper.jpg" id="1_xjjhm"]
+
+[node name="VictoryScene" type="Control" unique_id=2122450701]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_sl7wn")
+
+[node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=1574228875]
+layer = -1
+
+[node name="Background" type="Sprite2D" parent="BackgroundLayer" unique_id=1784991725]
+texture = ExtResource("1_xjjhm")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1318573994]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -100.0
+offset_right = 150.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LabelResult" type="Label" parent="VBoxContainer" unique_id=1282814085]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.23529412, 0.23529412, 0.78431374, 1)
+text = "You Win!"
+
+[node name="LabelWinner" type="Label" parent="VBoxContainer" unique_id=1924558489]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.23529412, 0.23529412, 0.78431374, 1)
+text = "Player X wins the war!"
+
+[node name="ButtonPlayAgain" type="Button" parent="VBoxContainer" unique_id=1166804708]
+layout_mode = 2
+text = "Play Again"
+
+[node name="ButtonQuit" type="Button" parent="VBoxContainer" unique_id=53058306]
+layout_mode = 2
+text = "Quit"

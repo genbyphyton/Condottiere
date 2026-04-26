@@ -1,0 +1,136 @@
+[gd_scene format=3 uid="uid://dfv1d60g4miqb"]
+
+[ext_resource type="Script" uid="uid://cldt70yw0y027" path="res://src/ui/faction_select.gd" id="1_1i40i"]
+[ext_resource type="Texture2D" uid="uid://d22s3b0a8cgd8" path="res://assets/textures/oldpaper.jpg" id="2_v4ylb"]
+[ext_resource type="Texture2D" uid="uid://yvdo6pdsbqxu" path="res://assets/flags/covenant.png" id="3_n3sul"]
+[ext_resource type="Texture2D" uid="uid://dnjeet1l2j70h" path="res://assets/flags/crown.png" id="4_2ylbb"]
+[ext_resource type="Texture2D" uid="uid://bd0lbgksp2yw5" path="res://assets/flags/harp.png" id="5_a46s4"]
+[ext_resource type="Texture2D" uid="uid://doq580fyu8ysj" path="res://assets/flags/cross.png" id="6_ix11t"]
+
+[node name="FactionSelect" type="Control" unique_id=1866446529]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1i40i")
+
+[node name="BackgroundLayer" type="CanvasLayer" parent="." unique_id=794361617]
+layer = -1
+
+[node name="Background" type="Sprite2D" parent="BackgroundLayer" unique_id=1615488486]
+texture = ExtResource("2_v4ylb")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1173512260]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -230.0
+offset_top = -77.0
+offset_right = 230.0
+offset_bottom = 77.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 60
+
+[node name="LabelTitle" type="Label" parent="VBoxContainer" unique_id=1478919013]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.23529412, 0.23529412, 0.78431374, 1)
+text = "Choose your faction"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=868302649]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 100
+
+[node name="FactionButton_Scotland" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=265443525]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer/FactionButton_Scotland" unique_id=522326886]
+custom_minimum_size = Vector2(150, 200)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_n3sul")
+expand_mode = 2
+
+[node name="FactionButton_Wales" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1123092736]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer/FactionButton_Wales" unique_id=964946641]
+custom_minimum_size = Vector2(150, 200)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_2ylbb")
+expand_mode = 2
+
+[node name="TextureRect2" type="TextureRect" parent="VBoxContainer/HBoxContainer/FactionButton_Wales" unique_id=416472683]
+custom_minimum_size = Vector2(150, 200)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_2ylbb")
+expand_mode = 2
+
+[node name="FactionButton_Ireland" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=250005738]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer/FactionButton_Ireland" unique_id=1811603272]
+custom_minimum_size = Vector2(150, 200)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_a46s4")
+expand_mode = 2
+
+[node name="FactionButton_England" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1929551845]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer/FactionButton_England" unique_id=32893535]
+custom_minimum_size = Vector2(150, 200)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_ix11t")
+expand_mode = 2
+
+[node name="LabelSelected" type="Label" parent="VBoxContainer" unique_id=652063161]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.23529412, 0.23529412, 0.78431374, 1)
+text = "Select a faction"
+
+[node name="ButtonConfirm" type="Button" parent="VBoxContainer" unique_id=1717733709]
+layout_mode = 2
+text = "Confirm"
