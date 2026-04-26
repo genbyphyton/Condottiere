@@ -1,3 +1,9 @@
+<p align="center">
+  <img src="icon.svg" width="120" />
+</p>
+
+[Game Design Document](GDD.md)
+
 # Mercenary
 
 > A 4-player digital area control card strategy game set in the medieval British Isles.
