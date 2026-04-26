@@ -3,6 +3,7 @@
 </p>
 
 [Game Design Document](GDD.md)
+[YouTube video](https://youtu.be/Dton62W0AWI)
 
 # Mercenary
 
